@@ -11,6 +11,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        //fungsi untuk menampilkan informasi
         return view('posts');
     }
 
