@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\Auth\LoginRegisterController;
+use App\Http\Controllers\UserController;
 
 
 Route::get('/', function () {
@@ -76,6 +77,7 @@ Route::middleware(['admin'])->group(function () {
 Route::get('/home', [LoginRegisterController::class, 'dashboard'])->name('home');
 
 
+Route::resource('users', UserController::class);
 // Route::middleware(['admin'])->group(function () {
 //     Route::get('/admin', [AdminController::class, 'index']);
 // });

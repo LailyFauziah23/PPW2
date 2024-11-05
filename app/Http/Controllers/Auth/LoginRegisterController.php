@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Buku; //tambahan
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -40,15 +41,27 @@ class LoginRegisterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:250',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|max:250|unique:users',
             'password' => 'required|min:8|confirmed',
+            'photo' => 'image|nullable|max:1999'
         ]);
+
+        if ($request->hasFile('photo')) {
+            $filenameWithExt = $request->file('photo')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filenameSimpan = $filename . '_' . time() . '.' . $extension;
+            $path = $request->file('photo')->storeAs('photos', $filenameSimpan);
+        } else {
+
+        }
 
         // Create a new user untu nmbh ke dtbase
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password), //hash untuk mengacak agar lebih aman (mengenskripsi data)
+            'photo'=> $path
         ]);
 
         // Attempt to login the user after registration
