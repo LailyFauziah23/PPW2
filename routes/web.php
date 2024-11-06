@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GalleryController;
 
 
 Route::get('/', function () {
@@ -78,6 +79,13 @@ Route::get('/home', [LoginRegisterController::class, 'dashboard'])->name('home')
 
 
 Route::resource('users', UserController::class);
+
+Route::resource('gallery', GalleryController::class);
+
+Route::get('/gallery/{id}/edit', [GalleryController::class, 'edit'])->name('gallery.edit');
+Route::delete('/gallery/{id}', [GalleryController::class, 'destroy'])->name('gallery.destroy');
+
+
 // Route::middleware(['admin'])->group(function () {
 //     Route::get('/admin', [AdminController::class, 'index']);
 // });
