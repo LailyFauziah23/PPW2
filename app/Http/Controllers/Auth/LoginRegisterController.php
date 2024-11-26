@@ -53,29 +53,29 @@ class LoginRegisterController extends Controller
             $filenameSimpan = $filename . '_' . time() . '.' . $extension;
             $path = $request->file('photo')->storeAs('photos', $filenameSimpan);
         } else {
-
+            $path = null; // Default value if no photo is uploaded
         }
-
-        // Create a new user untu nmbh ke dtbase
+        
+        // Create a new user to add to the database
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), //hash untuk mengacak agar lebih aman (mengenskripsi data)
-            'photo'=> $path
+            'password' => Hash::make($request->password), // Hash to secure the password
+            'photo' => $path
         ]);
+        
+         // Attempt to login the user after registration
+    $credentials = $request->only('email', 'password');
+    Auth::attempt($credentials);
+    $request->session()->regenerate();
 
-        // Attempt to login the user after registration
-        $credentials = $request->only('email', 'password');
-        Auth::attempt($credentials); //auth::atempt untuk 
-        $request->session()->regenerate();
-
-        return redirect()->route('dashboard')
-            ->withSuccess('You have successfully registered & logged in!');
+    return redirect()->route('dashboard')
+        ->withSuccess('You have successfully registered & logged in!');
     }
 
     /**
      * Display the login form.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function login()
@@ -83,12 +83,14 @@ class LoginRegisterController extends Controller
         return view('auth.login');
     }
 
-    public function __construct(){
-        $this->middleware('guest')->except(['logout', 'dashboard']);}
+    public function __construct()
+    {
+        $this->middleware('guest')->except(['logout', 'dashboard']);
+    }
 
     /**
      * Authenticate the user.
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use App\Mail\UserRegistered;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -53,7 +55,7 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id)
-{
+    {
     // Validasi input gambar
     $request->validate([
         'name' => 'required|string|max:255',
@@ -95,6 +97,21 @@ class UserController extends Controller
     $user->save();
 
     return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui');
+}
+
+public function register(Request $request)
+{
+    // Misalnya kita menyimpan data pengguna ke database di sini
+
+    // Contoh data pengguna
+    $name = $request->input('name');
+    $email = $request->input('email');
+    $registrationDate = Carbon::now()->toDateString();
+
+    // Kirim email notifikasi
+    Mail::to($email)->send(new UserRegistered($name, $email, $registrationDate));
+
+    return response()->json(['message' => 'Pendaftaran berhasil dan email notifikasi telah dikirim.']);
 }
 
 }

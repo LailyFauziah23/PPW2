@@ -7,6 +7,8 @@ use App\Http\Controllers\BukuController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\RegistrationController;
 
 
 Route::get('/', function () {
@@ -85,6 +87,13 @@ Route::resource('gallery', GalleryController::class);
 Route::get('/gallery/{id}/edit', [GalleryController::class, 'edit'])->name('gallery.edit');
 Route::delete('/gallery/{id}', [GalleryController::class, 'destroy'])->name('gallery.destroy');
 
+Route::get('/send-mail', [SendEmailController::class,'index'])->name ('kirim-email');
+Route::post('/post-email', [SendEmailController::class, 'store']) -> name ('post-email');
+
+Route::post('/register', [RegistrationController::class, 'register'])->name('register');
+
+Route::get('/register', [LoginRegisterController::class, 'register'])->name('register');
+Route::post('/register', [LoginRegisterController::class, 'store'])->name('store');
 
 // Route::middleware(['admin'])->group(function () {
 //     Route::get('/admin', [AdminController::class, 'index']);
